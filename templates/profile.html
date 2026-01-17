@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="/profile" class="nav-link">Profile</a>
+        </div>
+        
+        <div class="nav-center">
+            <a href="/home" class="nav-link">Home</a>
+            <a href="/create-post" class="nav-link">Create Post</a>
+        </div>
+        
+        <div class="nav-right">
+            <a href="/logout" class="nav-link logout-btn">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Profile Info Box -->
+        <div class="profile-info-box">
+            <div class="info-row">
+                <span class="info-label">Username:</span>
+                <span class="info-value">{{.Username}}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{.Email}}</span>
+            </div>
+        </div>
+        
+        <!-- Edit Profile Button -->
+        <a href="/edit-profile" class="edit-profile-btn">⚙️ Edit Profile</a>
+        
+        
+        <!-- Tabs -->
+        <div class="profile-tabs">
+            <a href="/profile?tab=created" class="tab {{if eq .CurrentTab "created"}}active{{end}}">
+                My Posts
+            </a>
+            <a href="/profile?tab=liked" class="tab {{if eq .CurrentTab "liked"}}active{{end}}">
+                Liked Posts
+            </a>
+        </div>
+
+        <!-- Posts -->
+        <div class="posts-container">
+            {{range .Posts}}
+                <div class="post-card">
+                    <h2>{{.Title}}</h2>
+                    <p class="post-author">By: {{.Username}}</p>
+                    <p class="post-content">{{.Content}}</p>
+                    
+                    <div class="post-reactions">
+                        <span>👍 {{.LikesCount}}</span>
+                        <span>👎 {{.DislikesCount}}</span>
+                        <span>💬 {{.CommentsCount}}</span>
+                    </div>
+
+                    {{if eq .UserID $.CurrentUserID}}
+                        <div class="post-actions">
+                            <a href="/edit-post?id={{.ID}}" class="edit-btn">✏️ Edit</a>
+                            <form action="/delete-post" method="post" style="display:inline;">
+                                <input type="hidden" name="post_id" value="{{.ID}}">
+                                <button type="submit" class="delete-btn" onclick="return confirm('Are you sure?')">🗑️ Delete</button>
+                            </form>
+                        </div>
+                    {{end}}
+                </div>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>

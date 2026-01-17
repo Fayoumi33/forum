@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details</title>
+</head>
+<body>
+    <div class="post-details-container">
+    <div class="post">
+    <h2>{{.Post.Title}}</h2>
+    <p>{{.Post.Content}}</p>
+    <p> By: {{.Post.Username}}</p> | <p>{{.Post.CreatedAt}}</p>
+    
+    <div class="post-reactions">
+        <form action="/like-post" method="post">
+            <input type="hidden" name="post_id" value="{{.Post.ID}}">
+            <button type="submit">👍 Like ({{.Post.LikesCount}})</button>
+        </form>
+
+        <form action="/dislike-post" method="post">
+            <input type="hidden" name="post_id" value="{{.Post.ID}}">
+            <button type="submit">👎 dislike ({{.Post.DislikesCount}})</button>
+        </form>
+    </div>
+
+    </div>
+    {{range .Comments}} 
+    <div class="comment">
+        <p><strong>{{.Username}}</strong> - {{.CreatedAt}}</p>
+        <p>{{.Content}}</p>
+        <p>👍 {{.LikesCount}} | 👎 {{.DislikesCount}}</p>
+        <div class="comment-reactions">
+            <form action="/like-comment" method="post">
+                <input type="hidden" name="comment_id" value="{{.ID}}">
+                            <input type="hidden" name="post_id" value="{{$.Post.ID}}">
+                <button type="submit">👍 Like ({{.LikesCount}})</button>
+            </form>
+
+            <form action="/dislike-comment" method="post">
+                <input type="hidden" name="comment_id" value="{{.ID}}">
+                            <input type="hidden" name="post_id" value="{{$.Post.ID}}">
+                <button type="submit">👎 dislike ({{.DislikesCount}})</button>
+            </form>
+        </div>
+    </div>
+    {{end}}
+    <div class="add-comment-form">
+        <h3> Add a comment </h3>
+        <form action="/add-comment" method="post">
+            <input type="hidden" name="post_id" value="{{.Post.ID}}">
+            <textarea name="content" required></textarea>
+            <button type="submit"> Submit Comment </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

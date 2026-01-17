@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post </title>
+</head>
+<body>
+    <div class="container">
+        <form action="/edit-post" method="post">
+            <input type="hidden" name="post_id" value="{{.ID}}">
+            <input type="text" name="title" value="{{.Title}}" required>
+            <textarea name="content" id="" required> {{.Content}}</textarea>
+            <div class="categories">
+                <label>Categories (choose at least one):</label><br>
+                <input type="checkbox" name="categories" value="Technology" id="tech">
+                <label for="tech">Technology</label><br>
+                
+                <input type="checkbox" name="categories" value="Sport" id="sport">
+                <label for="sport">Sport</label><br>
+            
+                <input type="checkbox" name="categories" value="Gaming" id="gaming">
+                <label for="gaming">Gaming</label><br>
+                
+                <input type="checkbox" name="categories" value="News" id="news">
+                <label for="news">News</label><br>
+                
+                <input type="checkbox" name="categories" value="Programming" id="programming">
+                <label for="programming">Programming</label><br>
+                
+            <input type="checkbox" name="categories" value="Quran" id="quran">
+            <label for="quran">Quran</label><br>
+            
+            <input type="checkbox" name="categories" value="Other" id="other">
+            <label for="other">Other</label><br>
+        </div>
+        <button type="submit" class="save-btn"> Save Changes </button>
+        <a href="/profile" class="cancel-btn"> Cancel </a>
+        </form>
+    </div>
+</body>
+</html>

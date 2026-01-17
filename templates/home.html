@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forum - Home</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="/profile" class="nav-link">Profile</a>
+    </div>
+
+    <div class="nav-center">
+        <a href="/home" class="nav-link">Home</a>
+
+        <!-- Categories Dropdown -->
+        <div class="dropdown">
+            <span class="nav-link dropdown-btn">Categories ▼</span>
+            <ul class="dropdown-content">
+                <li><a href="/home">All</a></li>
+                <li><a href="/home?category=Technology">Technology</a></li>
+                <li><a href="/home?category=Sport">Sport</a></li>
+                <li><a href="/home?category=Gaming">Gaming</a></li>
+                <li><a href="/home?category=News">News</a></li>
+                <li><a href="/home?category=Programming">Programming</a></li>
+                <li><a href="/home?category=Quran">Quran</a></li>
+                <li><a href="/home?category=Other">Other</a></li>
+            </ul>
+        </div>
+
+        <a href="/create-post" class="nav-link">Create Post</a>
+    </div>
+
+    <div class="nav-right">
+        <a href="/logout" class="nav-link logout-btn">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Forum Posts</h1>
+
+    <div class="posts-container">
+        {{ range . }}
+        {{ $postID := .ID }}
+        <div class="post-wrapper">
+            <input type="checkbox" id="toggle-{{.ID}}" class="comment-toggle">
+
+            <div class="post-card">
+                <h2>{{ .Title }}</h2>
+                <p class="post-author">By: {{ .Username }}</p>
+                <p class="post-content">{{ .Content }}</p>
+
+                <div class="post-reactions">
+                    <form action="/like-post" method="post" style="display:inline;">
+                        <input type="hidden" name="post_id" value="{{.ID}}">
+                        <button type="submit" class="reaction-btn">
+                            👍 {{.LikesCount}}
+                        </button>
+                    </form>
+
+                    <form action="/dislike-post" method="post" style="display:inline;">
+                        <input type="hidden" name="post_id" value="{{.ID}}">
+                        <button type="submit" class="reaction-btn">
+                            👎 {{.DislikesCount}}
+                        </button>
+                    </form>
+
+                    <label for="toggle-{{.ID}}" class="comments-btn">
+                        💬 {{.CommentsCount}} Comments
+                    </label>
+                </div>
+            </div>
+
+            <div class="comments-sidebar">
+                <div class="sidebar-header">
+                    <h3>Comments ({{.CommentsCount}})</h3>
+                    <label for="toggle-{{.ID}}" class="close-btn">×</label>
+                </div>
+
+                <div class="comments-list">
+                    {{ if .Comments }}
+                        {{ range .Comments }}
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <strong class="comment-author">{{.Username}}</strong>
+                                <span class="comment-date">{{.CreatedAt}}</span>
+                            </div>
+
+                            <p class="comment-content">{{.Content}}</p>
+
+                            <div class="comment-reactions">
+                                <form action="/like-comment" method="post" style="display:inline;">
+                                    <input type="hidden" name="comment_id" value="{{.ID}}">
+                                    <button type="submit" class="reaction-btn-small">
+                                        👍 {{.LikesCount}}
+                                    </button>
+                                </form>
+
+                                <form action="/dislike-comment" method="post" style="display:inline;">
+                                    <input type="hidden" name="comment_id" value="{{.ID}}">
+                                    <button type="submit" class="reaction-btn-small">
+                                        👎 {{.DislikesCount}}
+                                    </button>
+                                </form>
+
+                                <input type="checkbox" id="reply-toggle-{{.ID}}" class="reply-toggle">
+                                <label for="reply-toggle-{{.ID}}" class="reply-btn">💬 Reply</label>
+                            </div>
+
+                            <div class="reply-form-container">
+                                <form action="/add-comment" method="post" class="reply-form">
+                                    <input type="hidden" name="post_id" value="{{$postID}}">
+                                    <input type="hidden" name="parent_comment_id" value="{{.ID}}">
+                                    <textarea name="content" placeholder="Write your reply..." required></textarea>
+                                    <button type="submit" class="submit-reply-btn">Post Reply</button>
+                                </form>
+                            </div>
+                        </div>
+                        {{ end }}
+                    {{ else }}
+                        <p class="no-comments">
+                            No comments yet. Be the first to comment!
+                        </p>
+                    {{ end }}
+                </div>
+
+                <div class="add-comment-section">
+                    <h4>Add a Comment</h4>
+                    <form action="/add-comment" method="post">
+                        <input type="hidden" name="post_id" value="{{$postID}}">
+                        <textarea name="content" placeholder="Write your comment here..." required></textarea>
+                        <button type="submit" class="submit-comment-btn">
+                            Post Comment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+</body>
+</html>

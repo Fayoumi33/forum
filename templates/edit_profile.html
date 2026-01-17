@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edit profile</title>
+</head>
+<body>
+    <form action="/edit-profile" method="post" class="edit-form">
+        username : <input type="text" name="username" value="{{.Username}}" required>
+        email : <input type="email" name="email" value="{{.Email}}" required>
+        Current password : <input type="password" name="current_password" required>
+        new password : <input type="password" name="new_password">
+        confirm new password : <input type="password" name="confirm_password">
+        <button type="submit" class="save-btn"> Save Changes </button>
+        <a href="/profile" class="cancel-btn"> Cancel </a>
+    </form>
+    <form action="/profile" method="post">
+        <button type="submit" class="back-btn"> Back</button>
+    </form>
+    </body>
+</html>

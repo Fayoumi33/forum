@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create new account </title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <div class="left-section">
+        <h1 class="logo">Join our Forum app</h1>
+        <p class="tagline">Connect with your friends today! <br>
+            <span>Create your account now</span></p>
+    </div>
+    <div class="right-section">
+        <div class="form-container">
+            <form action="/register" method="post">
+                <input type="text" placeholder="Enter Username" name="username" required>
+                <input type="email" placeholder="Enter Email" name="email" required>
+                <input type="password" placeholder="Enter Password" name="password" required>
+                <input type="password" placeholder="Confirm Password" name="confirm_password" required>
+                <button type="submit"> Register </button>
+                <hr>
+                <a href="/login" class="create-account">Already have an account? Sign In</a>
+            </form>
+        </div>
+        </div>
+</body>
+</html>

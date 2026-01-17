@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Forum </title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <div class="left-section">
+        <h1 class="logo">Welcome to our Forum app</h1>
+        <p class="tagline">Wanna connect with your friends? <br>
+            <span>Sign in now</span></p>
+    </div>
+    
+    <div class="right-section">
+        <div class="form-container">
+            <form action="/login" method="post">
+                <input type="text" placeholder="Enter Email" name="email" required>
+                <input type="password" placeholder="Enter Password" name="password" required>
+                <button type="submit"> Sign In </button>
+                <a href="" class="forgot">Forgot password?</a>
+                <hr>
+                <a href="/register" class="create-account">Create new account</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
