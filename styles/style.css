@@ -506,44 +506,6 @@ body {
     color: white;
 }
 
-/* Post Actions (Edit/Delete buttons) */
-.post-actions {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-}
-
-.edit-btn,
-.delete-btn {
-    padding: 8px 15px;
-    font-size: 14px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border: none;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.edit-btn {
-    background-color: #8D6E63;
-    color: white;
-}
-
-.edit-btn:hover {
-    background-color: #6D4C41;
-}
-
-.delete-btn {
-    background-color: #D32F2F;
-    color: white;
-}
-
-.delete-btn:hover {
-    background-color: #B71C1C;
-}
-
 /* Posts */
 .posts-container {
     display: flex;
@@ -646,6 +608,55 @@ body {
 .post-reactions span {
     color: #6D4C41;
     font-weight: bold;
+}
+
+/* Post Actions (Edit/Delete buttons) */
+.post-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+    flex: 1;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.edit-btn {
+    background-color: #6D4C41;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #8D6E63;
+    transform: translateY(-2px);
+}
+
+.delete-btn {
+    background-color: white;
+    color: #D32F2F;
+    border: 2px solid #D32F2F;
+}
+
+.delete-btn:hover {
+    background-color: #D32F2F;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.post-actions form {
+    flex: 1;
+    display: flex;
 }
 
 /* Comments Sidebar */
@@ -1168,7 +1179,6 @@ body {
         padding: 10px;
     }
     
-    /* Create Post Responsive */
     .create-post-card {
         padding: 25px 20px;
     }
@@ -1179,5 +1189,1035 @@ body {
     
     .create-post-card h1 {
         font-size: 24px;
+    }
+}
+
+/* ==================== RESPONSIVE DESIGN - ALL DEVICES ==================== */
+
+/* Extra Large Desktops (1920px and above) */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    .navbar {
+        padding: 18px 60px;
+    }
+    
+    .post-card h2 {
+        font-size: 28px;
+    }
+    
+    .create-post-card {
+        max-width: 900px;
+    }
+}
+
+/* Large Desktops (1440px - 1919px) */
+@media (min-width: 1440px) and (max-width: 1919px) {
+    .container {
+        max-width: 1200px;
+    }
+    
+    .navbar {
+        padding: 16px 50px;
+    }
+}
+
+/* Standard Desktops (1200px - 1439px) */
+@media (min-width: 1200px) and (max-width: 1439px) {
+    .container {
+        max-width: 1100px;
+    }
+    
+    .navbar {
+        padding: 15px 45px;
+    }
+}
+
+/* Small Desktops & Laptops (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .container {
+        max-width: 960px;
+        padding: 35px 20px;
+    }
+    
+    .navbar {
+        padding: 15px 30px;
+    }
+    
+    .nav-link {
+        font-size: 15px;
+        padding: 9px 18px;
+    }
+    
+    body.auth-page {
+        padding: 30px 50px;
+    }
+    
+    .logo {
+        font-size: 48px;
+    }
+    
+    .tagline {
+        font-size: 22px;
+    }
+    
+    .comments-sidebar {
+        width: 50%;
+        right: -50%;
+    }
+}
+
+/* Tablet Landscape & iPad Pro (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .container {
+        max-width: 720px;
+        padding: 30px 20px;
+    }
+    
+    .navbar {
+        padding: 15px 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .nav-left,
+    .nav-center,
+    .nav-right {
+        gap: 15px;
+    }
+    
+    .nav-link {
+        font-size: 15px;
+        padding: 8px 16px;
+    }
+    
+    body.auth-page {
+        flex-direction: column;
+        padding: 25px 30px;
+    }
+    
+    .left-section {
+        text-align: center;
+        padding-right: 0;
+        margin-bottom: 25px;
+    }
+    
+    .logo {
+        font-size: 44px;
+    }
+    
+    .tagline {
+        font-size: 20px;
+    }
+    
+    .form-container {
+        max-width: 450px;
+    }
+    
+    .post-card h2 {
+        font-size: 22px;
+    }
+    
+    .post-content {
+        font-size: 15px;
+    }
+    
+    .comments-sidebar {
+        width: 60%;
+        right: -60%;
+    }
+    
+    .comment-toggle:checked ~ .post-card {
+        flex: 0 0 100%;
+    }
+    
+    .profile-stats {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        flex: 1 1 40%;
+        min-width: 150px;
+    }
+    
+    .create-post-card {
+        padding: 30px;
+    }
+    
+    .categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+}
+
+/* Tablet Portrait & iPad (600px - 767px) */
+@media (min-width: 600px) and (max-width: 767px) {
+    .container {
+        max-width: 540px;
+        padding: 25px 20px;
+    }
+    
+    .container h1 {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+    
+    .navbar {
+        padding: 12px 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .nav-link {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+    
+    .dropdown-content {
+        min-width: 180px;
+    }
+    
+    body.auth-page {
+        flex-direction: column;
+        padding: 20px 25px;
+    }
+    
+    .left-section {
+        text-align: center;
+        padding-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .logo {
+        font-size: 40px;
+    }
+    
+    .tagline {
+        font-size: 19px;
+    }
+    
+    .form-container {
+        max-width: 100%;
+    }
+    
+    .post-card {
+        padding: 18px;
+    }
+    
+    .post-card h2 {
+        font-size: 20px;
+    }
+    
+    .post-content {
+        font-size: 14px;
+    }
+    
+    .post-reactions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .reaction-btn,
+    .comments-btn {
+        font-size: 13px;
+        padding: 7px 13px;
+    }
+    
+    .comments-sidebar {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .comment-toggle:checked ~ .post-card {
+        display: none;
+    }
+    
+    .sidebar-header h3 {
+        font-size: 22px;
+    }
+    
+    .comment-item {
+        padding: 12px;
+    }
+    
+    .profile-stats {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .stat-item {
+        padding: 12px 25px;
+    }
+    
+    .stat-number {
+        font-size: 28px;
+    }
+    
+    .profile-tabs {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .tab {
+        padding: 10px 25px;
+        font-size: 15px;
+    }
+    
+    .edit-profile-btn {
+        padding: 10px 25px;
+        font-size: 15px;
+    }
+    
+    .edit-toggle:checked ~ .edit-profile-form {
+        max-height: 1000px;
+        padding: 20px;
+    }
+    
+    .create-post-container {
+        padding: 0 15px;
+    }
+    
+    .create-post-card {
+        padding: 25px;
+    }
+    
+    .create-post-card h1 {
+        font-size: 26px;
+    }
+    
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .category-label {
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+}
+
+/* Large Mobile (480px - 599px) */
+@media (min-width: 480px) and (max-width: 599px) {
+    .container {
+        max-width: 100%;
+        padding: 20px 15px;
+    }
+    
+    .container h1 {
+        font-size: 26px;
+        margin-bottom: 20px;
+    }
+    
+    .navbar {
+        padding: 12px 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .nav-link {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    .dropdown-content {
+        min-width: 160px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-15px);
+    }
+    
+    .dropdown:hover .dropdown-content {
+        transform: translateX(-50%) translateY(0);
+    }
+    
+    body.auth-page {
+        flex-direction: column;
+        padding: 20px;
+    }
+    
+    .left-section {
+        text-align: center;
+        padding-right: 0;
+        margin-bottom: 20px;
+    }
+    
+    .logo {
+        font-size: 36px;
+    }
+    
+    .tagline {
+        font-size: 18px;
+    }
+    
+    input {
+        padding: 13px 15px;
+        font-size: 15px;
+    }
+    
+    button {
+        padding: 13px;
+        font-size: 17px;
+    }
+    
+    .posts-container {
+        gap: 15px;
+    }
+    
+    .post-card {
+        padding: 16px;
+    }
+    
+    .post-card h2 {
+        font-size: 19px;
+        margin-bottom: 8px;
+    }
+    
+    .post-author {
+        font-size: 13px;
+    }
+    
+    .post-content {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+    
+    .post-reactions {
+        margin-top: 12px;
+        gap: 8px;
+    }
+    
+    .reaction-btn,
+    .comments-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .post-actions {
+        margin-top: 12px;
+        gap: 8px;
+    }
+    
+    .edit-btn,
+    .delete-btn {
+        font-size: 13px;
+        padding: 7px 13px;
+    }
+    
+    .comments-sidebar {
+        width: 100%;
+        right: -100%;
+        padding: 15px;
+    }
+    
+    .sidebar-header {
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+    }
+    
+    .sidebar-header h3 {
+        font-size: 20px;
+    }
+    
+    .close-btn {
+        font-size: 32px;
+    }
+    
+    .comment-item {
+        padding: 12px;
+    }
+    
+    .comment-author {
+        font-size: 15px;
+    }
+    
+    .comment-content {
+        font-size: 14px;
+    }
+    
+    .add-comment-section textarea {
+        min-height: 70px;
+        font-size: 14px;
+    }
+    
+    .submit-comment-btn {
+        font-size: 15px;
+        padding: 11px;
+    }
+    
+    .profile-info-box {
+        padding: 20px;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .info-label {
+        font-size: 15px;
+    }
+    
+    .info-value {
+        font-size: 17px;
+    }
+    
+    .profile-stats {
+        flex-direction: column;
+        gap: 10px;
+        padding: 18px;
+    }
+    
+    .stat-item {
+        padding: 10px 20px;
+    }
+    
+    .stat-number {
+        font-size: 26px;
+    }
+    
+    .stat-label {
+        font-size: 13px;
+    }
+    
+    .profile-tabs {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .tab {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .edit-profile-btn {
+        padding: 10px 25px;
+        font-size: 15px;
+    }
+    
+    .create-post-container {
+        margin: 30px auto;
+    }
+    
+    .create-post-card {
+        padding: 20px;
+    }
+    
+    .create-post-card h1 {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+    
+    .create-post-form {
+        gap: 18px;
+    }
+    
+    .create-post-form .form-group label {
+        font-size: 15px;
+    }
+    
+    .create-post-form .form-group input[type="text"],
+    .create-post-form .form-group textarea {
+        padding: 13px 15px;
+        font-size: 15px;
+    }
+    
+    .create-post-form .form-group textarea {
+        min-height: 130px;
+    }
+    
+    .categories-section {
+        padding: 18px;
+    }
+    
+    .categories-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .category-label {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .submit-btn {
+        padding: 14px;
+        font-size: 17px;
+    }
+}
+
+/* Small Mobile (360px - 479px) */
+@media (min-width: 360px) and (max-width: 479px) {
+    .container {
+        padding: 15px 12px;
+    }
+    
+    .container h1 {
+        font-size: 24px;
+        margin-bottom: 18px;
+    }
+    
+    .navbar {
+        padding: 10px 12px;
+        gap: 6px;
+    }
+    
+    .nav-link {
+        font-size: 13px;
+        padding: 7px 10px;
+    }
+    
+    body.auth-page {
+        padding: 15px;
+    }
+    
+    .logo {
+        font-size: 32px;
+    }
+    
+    .tagline {
+        font-size: 17px;
+    }
+    
+    .form-container {
+        padding: 18px;
+    }
+    
+    input {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+    
+    button {
+        padding: 12px;
+        font-size: 16px;
+    }
+    
+    .post-card {
+        padding: 14px;
+    }
+    
+    .post-card h2 {
+        font-size: 18px;
+    }
+    
+    .post-author {
+        font-size: 12px;
+    }
+    
+    .post-content {
+        font-size: 13px;
+    }
+    
+    .reaction-btn,
+    .comments-btn {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+    
+    .comments-sidebar {
+        padding: 12px;
+    }
+    
+    .sidebar-header h3 {
+        font-size: 18px;
+    }
+    
+    .close-btn {
+        font-size: 30px;
+    }
+    
+    .comment-item {
+        padding: 10px;
+    }
+    
+    .comment-author {
+        font-size: 14px;
+    }
+    
+    .comment-content {
+        font-size: 13px;
+    }
+    
+    .comment-reactions {
+        gap: 6px;
+    }
+    
+    .reaction-btn-small,
+    .reply-btn,
+    .show-replies-btn {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+    
+    .add-comment-section {
+        padding: 15px 0;
+    }
+    
+    .add-comment-section h4 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .add-comment-section textarea {
+        min-height: 65px;
+        font-size: 13px;
+        padding: 10px;
+    }
+    
+    .submit-comment-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .profile-info-box {
+        padding: 16px;
+    }
+    
+    .info-label {
+        font-size: 14px;
+    }
+    
+    .info-value {
+        font-size: 16px;
+    }
+    
+    .profile-stats {
+        padding: 15px;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+    }
+    
+    .tab {
+        padding: 9px 18px;
+        font-size: 13px;
+    }
+    
+    .edit-profile-btn {
+        padding: 9px 20px;
+        font-size: 14px;
+    }
+    
+    .create-post-card {
+        padding: 18px;
+    }
+    
+    .create-post-card h1 {
+        font-size: 22px;
+    }
+    
+    .create-post-form .form-group input[type="text"],
+    .create-post-form .form-group textarea {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .categories-section {
+        padding: 15px;
+    }
+    
+    .category-label {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+    
+    .submit-btn {
+        padding: 13px;
+        font-size: 16px;
+    }
+}
+
+/* Extra Small Mobile (320px - 359px) */
+@media (max-width: 359px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .container {
+        padding: 12px 10px;
+    }
+    
+    .container h1 {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+    
+    .navbar {
+        padding: 10px;
+        gap: 5px;
+    }
+    
+    .nav-link {
+        font-size: 12px;
+        padding: 6px 9px;
+    }
+    
+    body.auth-page {
+        padding: 12px;
+    }
+    
+    .logo {
+        font-size: 28px;
+    }
+    
+    .tagline {
+        font-size: 16px;
+    }
+    
+    .form-container {
+        padding: 16px;
+    }
+    
+    input {
+        padding: 11px 13px;
+        font-size: 14px;
+    }
+    
+    button {
+        padding: 11px;
+        font-size: 15px;
+    }
+    
+    .posts-container {
+        gap: 12px;
+    }
+    
+    .post-card {
+        padding: 12px;
+    }
+    
+    .post-card h2 {
+        font-size: 17px;
+        margin-bottom: 6px;
+    }
+    
+    .post-author {
+        font-size: 11px;
+    }
+    
+    .post-content {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    
+    .post-reactions {
+        margin-top: 10px;
+        gap: 6px;
+    }
+    
+    .reaction-btn,
+    .comments-btn {
+        font-size: 11px;
+        padding: 5px 9px;
+    }
+    
+    .edit-btn,
+    .delete-btn {
+        font-size: 12px;
+        padding: 6px 11px;
+    }
+    
+    .comments-sidebar {
+        padding: 10px;
+    }
+    
+    .sidebar-header {
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+    }
+    
+    .sidebar-header h3 {
+        font-size: 17px;
+    }
+    
+    .close-btn {
+        font-size: 28px;
+    }
+    
+    .comment-item {
+        padding: 10px;
+    }
+    
+    .comment-author {
+        font-size: 13px;
+    }
+    
+    .comment-content {
+        font-size: 12px;
+    }
+    
+    .add-comment-section {
+        padding: 12px 0;
+    }
+    
+    .add-comment-section h4 {
+        font-size: 15px;
+    }
+    
+    .add-comment-section textarea {
+        min-height: 60px;
+        font-size: 13px;
+        padding: 9px;
+    }
+    
+    .submit-comment-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .profile-info-box {
+        padding: 14px;
+    }
+    
+    .info-label {
+        font-size: 13px;
+    }
+    
+    .info-value {
+        font-size: 15px;
+    }
+    
+    .profile-stats {
+        padding: 12px;
+        gap: 8px;
+    }
+    
+    .stat-item {
+        padding: 8px 15px;
+    }
+    
+    .stat-number {
+        font-size: 22px;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+    }
+    
+    .profile-tabs {
+        gap: 6px;
+    }
+    
+    .tab {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+    
+    .edit-profile-btn {
+        padding: 8px 18px;
+        font-size: 13px;
+    }
+    
+    .create-post-container {
+        margin: 25px auto;
+    }
+    
+    .create-post-card {
+        padding: 16px;
+    }
+    
+    .create-post-card h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .create-post-form {
+        gap: 15px;
+    }
+    
+    .create-post-form .form-group label {
+        font-size: 14px;
+    }
+    
+    .create-post-form .form-group input[type="text"],
+    .create-post-form .form-group textarea {
+        padding: 11px 13px;
+        font-size: 14px;
+    }
+    
+    .create-post-form .form-group textarea {
+        min-height: 120px;
+    }
+    
+    .categories-section {
+        padding: 14px;
+    }
+    
+    .categories-section > label {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+    
+    .categories-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .category-label {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+    
+    .submit-btn {
+        padding: 12px;
+        font-size: 15px;
+    }
+    
+    .back-link {
+        font-size: 13px;
+    }
+}
+
+/* Landscape Mode for Phones */
+@media (max-height: 500px) and (orientation: landscape) {
+    body.auth-page {
+        flex-direction: row;
+        padding: 15px 30px;
+    }
+    
+    .left-section {
+        flex: 1;
+        text-align: left;
+        padding-right: 30px;
+        margin-bottom: 0;
+    }
+    
+    .logo {
+        font-size: 32px;
+    }
+    
+    .tagline {
+        font-size: 16px;
+    }
+    
+    .form-container {
+        padding: 15px;
+    }
+    
+    input {
+        padding: 10px 12px;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    button {
+        padding: 10px;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .comments-sidebar {
+        width: 70%;
+        right: -70%;
+    }
+    
+    .add-comment-section textarea {
+        min-height: 50px;
     }
 }

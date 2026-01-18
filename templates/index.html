@@ -3,26 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Forum </title>
-    <link rel="stylesheet" href="/styles/style.css">
+    <title>Login - Forum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F5F5DC;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            gap: 100px;
+            align-items: center;
+        }
+
+        /* Left Section */
+        .left-section {
+            flex: 1;
+        }
+
+        .logo {
+            color: #5D4037;
+            font-size: 60px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .tagline {
+            color: #6D4C41;
+            font-size: 28px;
+            line-height: 1.4;
+            font-weight: normal;
+        }
+
+        /* Right Section */
+        .right-section {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background-color: #FFFEF7;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.15);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            padding: 16px;
+            border: 1px solid #D7CCC8;
+            border-radius: 8px;
+            font-size: 17px;
+            background-color: #FAFAFA;
+            transition: border-color 0.2s;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #6D4C41;
+            box-shadow: 0 0 0 2px rgba(109, 76, 65, 0.1);
+        }
+
+        .login-btn {
+            padding: 16px;
+            background-color: #6D4C41;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 8px;
+        }
+
+        .login-btn:hover {
+            background-color: #5D4037;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .forgot-password a {
+            color: #6D4C41;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #D7CCC8;
+            margin: 20px 0;
+        }
+
+        .create-account-btn {
+            display: block;
+            padding: 16px 20px;
+            background-color: #8D6E63;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            text-decoration: none;
+            margin: 0 auto;
+            width: fit-content;
+        }
+
+        .create-account-btn:hover {
+            background-color: #6D4C41;
+        }
+
+        .create-page-text {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 14px;
+            color: #6D4C41;
+        }
+
+        .create-page-text a {
+            color: #5D4037;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .create-page-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        
+        /* Large Desktops (1920px and above) */
+        @media (min-width: 1920px) {
+            .login-container {
+                max-width: 1200px;
+                gap: 120px;
+            }
+
+            .logo {
+                font-size: 70px;
+            }
+
+            .tagline {
+                font-size: 32px;
+            }
+
+            .right-section {
+                max-width: 450px;
+            }
+        }
+
+        /* Desktop (1200px - 1919px) */
+        @media (min-width: 1200px) and (max-width: 1919px) {
+            .login-container {
+                max-width: 1100px;
+                gap: 100px;
+            }
+        }
+
+        /* Laptop (992px - 1199px) */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .login-container {
+                max-width: 960px;
+                gap: 80px;
+            }
+
+            .logo {
+                font-size: 54px;
+            }
+
+            .tagline {
+                font-size: 26px;
+            }
+        }
+
+        /* Tablet Landscape & iPad Pro (768px - 991px) */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .login-container {
+                max-width: 720px;
+                gap: 60px;
+            }
+
+            .logo {
+                font-size: 50px;
+            }
+
+            .tagline {
+                font-size: 24px;
+            }
+
+            .right-section {
+                max-width: 380px;
+            }
+        }
+
+        /* Tablet Portrait & iPad (600px - 767px) */
+        @media (min-width: 600px) and (max-width: 767px) {
+            .login-container {
+                flex-direction: column;
+                gap: 40px;
+                text-align: center;
+                max-width: 540px;
+            }
+
+            .logo {
+                font-size: 48px;
+            }
+
+            .tagline {
+                font-size: 22px;
+            }
+
+            .right-section {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .login-card {
+                padding: 24px;
+            }
+        }
+
+        /* Large Mobile (480px - 599px) */
+        @media (min-width: 480px) and (max-width: 599px) {
+            .login-container {
+                flex-direction: column;
+                gap: 35px;
+                text-align: center;
+            }
+
+            .logo {
+                font-size: 42px;
+            }
+
+            .tagline {
+                font-size: 20px;
+            }
+
+            .right-section {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .login-card {
+                padding: 20px;
+            }
+
+            input[type="email"],
+            input[type="password"] {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .login-btn {
+                font-size: 19px;
+                padding: 15px;
+            }
+
+            .create-account-btn {
+                font-size: 16px;
+                padding: 15px 18px;
+            }
+        }
+
+        /* Small Mobile (320px - 479px) */
+        @media (max-width: 479px) {
+            body {
+                padding: 15px;
+            }
+
+            .login-container {
+                flex-direction: column;
+                gap: 30px;
+                text-align: center;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+
+            .tagline {
+                font-size: 18px;
+                line-height: 1.3;
+            }
+
+            .right-section {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .login-card {
+                padding: 18px;
+            }
+
+            .login-form {
+                gap: 10px;
+            }
+
+            input[type="email"],
+            input[type="password"] {
+                font-size: 16px;
+                padding: 14px;
+            }
+
+            .login-btn {
+                font-size: 18px;
+                padding: 14px;
+                margin-top: 6px;
+            }
+
+            .forgot-password {
+                margin: 14px 0;
+            }
+
+            .forgot-password a {
+                font-size: 13px;
+            }
+
+            .divider {
+                margin: 18px 0;
+            }
+
+            .create-account-btn {
+                font-size: 15px;
+                padding: 14px 16px;
+            }
+
+            .create-page-text {
+                margin-top: 24px;
+                font-size: 13px;
+                padding: 0 10px;
+            }
+        }
+
+        /* Extra Small Mobile (below 320px) */
+        @media (max-width: 319px) {
+            .logo {
+                font-size: 32px;
+            }
+
+            .tagline {
+                font-size: 16px;
+            }
+
+            .login-card {
+                padding: 15px;
+            }
+
+            input[type="email"],
+            input[type="password"],
+            .login-btn,
+            .create-account-btn {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="left-section">
-        <h1 class="logo">Welcome to our Forum app</h1>
-        <p class="tagline">Wanna connect with your friends? <br>
-            <span>Sign in now</span></p>
-    </div>
-    
-    <div class="right-section">
-        <div class="form-container">
-            <form action="/login" method="post">
-                <input type="text" placeholder="Enter Email" name="email" required>
-                <input type="password" placeholder="Enter Password" name="password" required>
-                <button type="submit"> Sign In </button>
-                <a href="" class="forgot">Forgot password?</a>
-                <hr>
-                <a href="/register" class="create-account">Create new account</a>
-            </form>
+    <div class="login-container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h1 class="logo">forum</h1>
+            <p class="tagline">Connect with friends and the world around you on Forum.</p>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="login-card">
+                <form action="/login" method="POST" class="login-form">
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit" class="login-btn">Log In</button>
+                </form>
+
+                <div class="forgot-password">
+                </div>
+
+                <hr class="divider">
+
+                <a href="/register" class="create-account-btn">Create new account</a>
+            </div>
+
+            <p class="create-page-text">
+                <a href="#"><strong>Create a Page</strong></a> for a celebrity, brand or business.
+            </p>
         </div>
     </div>
 </body>

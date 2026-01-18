@@ -86,8 +86,8 @@ func main() {
         handlers.DeletePost(w, r, db)
     }))
 
-    fmt.Println("Server started at http://localhost:8080")
-    http.ListenAndServe(":8080", nil)
+    fmt.Println("Server started at http://localhost:8000")
+    http.ListenAndServe(":8000", nil)
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {

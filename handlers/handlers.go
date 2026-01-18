@@ -277,6 +277,7 @@ func PostDetails(w http.ResponseWriter , r *http.Request ,db *sql.DB){
     postID , err := strconv.Atoi(postIDStr)
     if err != nil {
         http.Error(w,"invalid post ID",http.StatusBadRequest)
+		return
     }
     postQuery := `SELECT p.id, p.title, p.content, p.created_at, p.user_id, u.username,
     COUNT(CASE WHEN pl.type = 'like' THEN 1 END) as likes_count,

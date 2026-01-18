@@ -130,7 +130,7 @@ expiresAt := time.Now().Add(24 * time.Hour).Format("2006-01-02 15:04:05")
 fmt.Println("Session ID:", sessionID)
 fmt.Println("Expires at:", expiresAt)
 
-insertSession := `insert into sessions (id, user_id, expires_at) values (?, ?, ?)`
+insertSession := `insert into sessions (id, user_id, expires_at) values (?, ?, datetime('now' , '+24 hours'))`
 _, err = db.Exec(insertSession, sessionID, userID, expiresAt)
 if err != nil {
     fmt.Println("ERROR: Session insert failed:", err)

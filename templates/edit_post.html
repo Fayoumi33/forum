@@ -3,40 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Post </title>
+    <title>Edit Post</title>
+    <link rel="stylesheet" href="static/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F5F5DC;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #6D4C41;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left,
+        .nav-center,
+        .nav-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: #8D6E63;
+        }
+
+        /* Container */
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #8D6E63;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            color: #5D4037;
+        }
+
+        .back-link::before {
+            content: '← ';
+        }
+
+        /* Edit Post Card */
+        .edit-post-card {
+            background-color: #FFFEF7;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(93, 64, 55, 0.15);
+        }
+
+        .edit-post-card h1 {
+            color: #5D4037;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        /* Form */
+        .edit-post-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: #5D4037;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            padding: 14px 16px;
+            border: 2px solid #D7CCC8;
+            border-radius: 10px;
+            font-size: 16px;
+            background-color: #FAFAFA;
+            font-family: 'Arial', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #8D6E63;
+            box-shadow: 0 0 0 3px rgba(141, 110, 99, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            background-color: #FAF8F3;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #D7CCC8;
+        }
+
+        .categories-section > label {
+            display: block;
+            color: #5D4037;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .category-item {
+            position: relative;
+        }
+
+        .category-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .category-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background-color: #FFFEF7;
+            border: 2px solid #D7CCC8;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: #6D4C41;
+        }
+
+        .category-label:hover {
+            border-color: #8D6E63;
+            background-color: #FFF9F0;
+        }
+
+        .category-item input[type="checkbox"]:checked + .category-label {
+            background-color: #6D4C41;
+            border-color: #6D4C41;
+            color: white;
+        }
+
+        .category-label .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D7CCC8;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .category-item input[type="checkbox"]:checked + .category-label .checkmark {
+            background-color: white;
+            border-color: white;
+        }
+
+        .category-label .checkmark::after {
+            content: '';
+            width: 6px;
+            height: 10px;
+            border: solid #6D4C41;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg) scale(0);
+            transition: transform 0.2s ease;
+        }
+
+        .category-item input[type="checkbox"]:checked + .category-label .checkmark::after {
+            transform: rotate(45deg) scale(1);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .save-btn {
+            background-color: #6D4C41;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background-color: #5D4037;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        .cancel-btn {
+            background-color: #A1887F;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background-color: #8D6E63;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 20px;
+                flex-wrap: wrap;
+            }
+
+            .nav-link {
+                font-size: 14px;
+                padding: 8px 14px;
+            }
+
+            .container {
+                padding: 0 15px;
+                margin: 30px auto;
+            }
+
+            .edit-post-card {
+                padding: 25px 20px;
+            }
+
+            .edit-post-card h1 {
+                font-size: 24px;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .edit-post-card {
+                padding: 20px 16px;
+            }
+
+            .edit-post-card h1 {
+                font-size: 22px;
+                margin-bottom: 25px;
+            }
+
+            .form-group label {
+                font-size: 15px;
+            }
+
+            .form-group input[type="text"],
+            .form-group textarea {
+                padding: 12px 14px;
+                font-size: 15px;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-label {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .save-btn,
+            .cancel-btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <form action="/edit-post" method="post">
-            <input type="hidden" name="post_id" value="{{.ID}}">
-            <input type="text" name="title" value="{{.Title}}" required>
-            <textarea name="content" id="" required> {{.Content}}</textarea>
-            <div class="categories">
-                <label>Categories (choose at least one):</label><br>
-                <input type="checkbox" name="categories" value="Technology" id="tech">
-                <label for="tech">Technology</label><br>
-                
-                <input type="checkbox" name="categories" value="Sport" id="sport">
-                <label for="sport">Sport</label><br>
-            
-                <input type="checkbox" name="categories" value="Gaming" id="gaming">
-                <label for="gaming">Gaming</label><br>
-                
-                <input type="checkbox" name="categories" value="News" id="news">
-                <label for="news">News</label><br>
-                
-                <input type="checkbox" name="categories" value="Programming" id="programming">
-                <label for="programming">Programming</label><br>
-                
-            <input type="checkbox" name="categories" value="Quran" id="quran">
-            <label for="quran">Quran</label><br>
-            
-            <input type="checkbox" name="categories" value="Other" id="other">
-            <label for="other">Other</label><br>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="/profile" class="nav-link">Profile</a>
         </div>
-        <button type="submit" class="save-btn"> Save Changes </button>
-        <a href="/profile" class="cancel-btn"> Cancel </a>
-        </form>
+        <div class="nav-center">
+            <a href="/home" class="nav-link">Home</a>
+        </div>
+        <div class="nav-right">
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <a href="/profile" class="back-link">Back to Profile</a>
+        
+        <div class="edit-post-card">
+            <h1>Edit Post</h1>
+            
+            <form action="/edit-post" method="post" class="edit-post-form">
+                <input type="hidden" name="post_id" value="{{.ID}}">
+                
+                <div class="form-group">
+                    <label for="title">Post Title</label>
+                    <input type="text" id="title" name="title" value="{{.Title}}" placeholder="Enter your post title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Post Content</label>
+                    <textarea id="content" name="content" placeholder="Write your post content here..." required>{{.Content}}</textarea>
+                </div>
+
+                <div class="categories-section">
+                    <label>Categories (choose at least one):</label>
+                    <div class="categories-grid">
+                        <div class="category-item">
+                            <input type="checkbox" name="categories" value="Technology" id="tech">
+                            <label for="tech" class="category-label">
+                                <span class="checkmark"></span>
+                                Technology
+                            </label>
+                        </div>
+                        
+                        <div class="category-item">
+                            <input type="checkbox" name="categories" value="Sport" id="sport">
+                            <label for="sport" class="category-label">
+                                <span class="checkmark"></span>
+                                Sport
+                            </label>
+                        </div>
+                        
+                        <div class="category-item">
+                            <input type="checkbox" name="categories" value="Gaming" id="gaming">
+                            <label for="gaming" class="category-label">
+                                <span class="checkmark"></span>
+                                Gaming
+                            </label>
+                        </div>
+                        
+                        <div class="category-item">
+                            <input type="checkbox" name="categories" value="News" id="news">
+                            <label for="news" class="category-label">
+                                <span class="checkmark"></span>
+                                News
+                            </label>
+                        </div>
+                        
+                        <div class="category-item">
+                            <input type="checkbox" name="categories" value="Programming" id="programming">
+                            <label for="programming" class="category-label">
+                                <span class="checkmark"></span>
+                                Programming
+                            </label>
+                        </div>
+                        
+                        <div class="category-item">
+                            <input type="checkbox" name="categories" value="Quran" id="quran">
+                            <label for="quran" class="category-label">
+                                <span class="checkmark"></span>
+                                Quran
+                            </label>
+                        </div>
+                        
+                        <div class="category-item">
+                            <input type="checkbox" name="categories" value="Other" id="other">
+                            <label for="other" class="category-label">
+                                <span class="checkmark"></span>
+                                Other
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="save-btn">Save Changes</button>
+                    <a href="/profile" class="cancel-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>

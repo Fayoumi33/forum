@@ -3,20 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>edit profile</title>
+    <title>Edit Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f1e8;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #6b5345;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        nav a {
+            color: #f5f1e8;
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            background-color: #5a453a;
+        }
+
+        .nav-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            color: #6b5345;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        /* Form Card */
+        .edit-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            color: #6b5345;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #d4c4b0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background-color: #fafaf8;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #6b5345;
+            background-color: white;
+        }
+
+        .password-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f0e8d8;
+        }
+
+        .password-section h3 {
+            color: #6b5345;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            flex: 1;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .save-btn {
+            background-color: #6b5345;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background-color: #5a453a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .cancel-btn {
+            background-color: #e8dcc8;
+            color: #6b5345;
+        }
+
+        .cancel-btn:hover {
+            background-color: #d4c4b0;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                margin: 2rem auto;
+            }
+
+            .edit-form {
+                padding: 1.5rem;
+            }
+
+            nav {
+                padding: 1rem;
+            }
+
+            nav a {
+                padding: 0.4rem 1rem;
+                font-size: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <form action="/edit-profile" method="post" class="edit-form">
-        username : <input type="text" name="username" value="{{.Username}}" required>
-        email : <input type="email" name="email" value="{{.Email}}" required>
-        Current password : <input type="password" name="current_password" required>
-        new password : <input type="password" name="new_password">
-        confirm new password : <input type="password" name="confirm_password">
-        <button type="submit" class="save-btn"> Save Changes </button>
-        <a href="/profile" class="cancel-btn"> Cancel </a>
-    </form>
-    <form action="/profile" method="post">
-        <button type="submit" class="back-btn"> Back</button>
-    </form>
-    </body>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="/profile">Profile</a>
+        <div class="nav-center">
+            <a href="/home">Home</a>
+        </div>
+        <div class="nav-right">
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Edit Profile</h1>
+        
+        <form action="/edit-profile" method="post" class="edit-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{.Username}}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{.Email}}" required>
+            </div>
+
+            <div class="password-section">
+                <h3>Change Password (Optional)</h3>
+                
+                <div class="form-group">
+                    <label for="current_password">Current Password</label>
+                    <input type="password" id="current_password" name="current_password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_password">New Password</label>
+                    <input type="password" id="new_password" name="new_password" placeholder="Leave blank to keep current password">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm New Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Leave blank to keep current password">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="save-btn">Save Changes</button>
+                <a href="/profile" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
 </html>
