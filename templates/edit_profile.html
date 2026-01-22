@@ -4,202 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Additional styles for edit profile page */
+        .edit-profile-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f1e8;
-            min-height: 100vh;
-        }
-
-        /* Navigation Bar */
-        nav {
-            background-color: #6b5345;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        nav a {
-            color: #f5f1e8;
-            text-decoration: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            font-size: 1.1rem;
-        }
-
-        nav a:hover {
-            background-color: #5a453a;
-        }
-
-        .nav-center {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-
-        .nav-right {
-            display: flex;
-            gap: 1rem;
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 600px;
-            margin: 3rem auto;
-            padding: 0 1rem;
-        }
-
-        h1 {
-            color: #6b5345;
+        .page-title {
+            color: #ffffff;
             text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2rem;
+            margin-bottom: 36px;
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Form Card */
         .edit-form {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: rgba(30, 36, 51, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 24px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            color: #6b5345;
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
+            margin-bottom: 10px;
+            font-size: 15px;
+            letter-spacing: 0.3px;
         }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
+        .form-group input {
             width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #d4c4b0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-            background-color: #fafaf8;
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
         }
 
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus {
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-group input:focus {
             outline: none;
-            border-color: #6b5345;
-            background-color: white;
+            border-color: rgba(139, 92, 246, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
 
         .password-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid #f0e8d8;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .password-section h3 {
-            color: #6b5345;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Buttons */
         .button-group {
             display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 16px;
+            margin-top: 32px;
         }
 
         .save-btn,
         .cancel-btn {
             flex: 1;
-            padding: 0.85rem;
+            padding: 16px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             text-decoration: none;
             text-align: center;
             display: inline-block;
         }
 
         .save-btn {
-            background-color: #6b5345;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .save-btn:hover {
-            background-color: #5a453a;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
         }
 
         .cancel-btn {
-            background-color: #e8dcc8;
-            color: #6b5345;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 2px solid rgba(239, 68, 68, 0.3);
         }
 
         .cancel-btn:hover {
-            background-color: #d4c4b0;
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
             transform: translateY(-2px);
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                margin: 2rem auto;
-            }
-
+        @media (max-width: 767px) {
             .edit-form {
-                padding: 1.5rem;
+                padding: 28px 24px;
             }
 
-            nav {
-                padding: 1rem;
-            }
-
-            nav a {
-                padding: 0.4rem 1rem;
-                font-size: 1rem;
+            .page-title {
+                font-size: 28px;
             }
 
             .button-group {
                 flex-direction: column;
             }
         }
+
+        @media (max-width: 479px) {
+            .edit-form {
+                padding: 24px 20px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .form-group input {
+                padding: 14px 16px;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav>
-        <a href="/profile">Profile</a>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="/profile" class="nav-link">Profile</a>
+        </div>
         <div class="nav-center">
-            <a href="/home">Home</a>
+            <a href="/home" class="nav-link">Home</a>
         </div>
         <div class="nav-right">
-            <a href="/logout">Logout</a>
+            <a href="/logout" class="nav-link logout-btn">Logout</a>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="container">
-        <h1>Edit Profile</h1>
+    <div class="edit-profile-container">
+        <h1 class="page-title">Edit Profile</h1>
         
         <form action="/edit-profile" method="post" class="edit-form">
             <div class="form-group">
