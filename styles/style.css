@@ -140,6 +140,21 @@ body {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
 
+/* Profile Icon */
+.profile-icon {
+    font-size: 20px;
+    padding: 8px 12px;
+}
+
+.profile-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.profile-icon:hover::before {
+    opacity: 0; /* Disable gradient for icon */
+}
+
 /* ==================== DROPDOWN MENU ==================== */
 .dropdown {
     position: relative;
@@ -693,7 +708,7 @@ body {
     width: fit-content;
     margin: 0 auto 32px auto;
     padding: 14px 36px;
-    background: var(--gradient-primary);
+    background: var(--accent-blue);
     color: white;
     border-radius: var(--radius-md);
     cursor: pointer;
@@ -703,12 +718,15 @@ body {
     user-select: none;
     text-align: center;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    border: none;
 }
 
 .edit-profile-btn:hover {
+    background: var(--accent-blue);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    color: white;
 }
 
 .edit-toggle {
