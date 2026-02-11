@@ -91,9 +91,9 @@ func main() {
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("=== Root handler called - Path:", r.URL.Path, "===") 
+    fmt.Println("=== Root handler called - Path:", r.URL.Path, "===")
     if r.URL.Path != "/" {
-        http.NotFound(w, r)
+        handlers.RenderError(w, http.StatusNotFound)
         return
     }
     http.Redirect(w, r, "/login", http.StatusSeeOther)

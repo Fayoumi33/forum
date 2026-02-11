@@ -106,18 +106,6 @@
                                         👎 {{.DislikesCount}}
                                     </button>
                                 </form>
-
-                                <input type="checkbox" id="reply-toggle-{{.ID}}" class="reply-toggle">
-                                <label for="reply-toggle-{{.ID}}" class="reply-btn">💬 Reply</label>
-                            </div>
-
-                            <div class="reply-form-container">
-                                <form action="/add-comment" method="post" class="reply-form">
-                                    <input type="hidden" name="post_id" value="{{$postID}}">
-                                    <input type="hidden" name="parent_comment_id" value="{{.ID}}">
-                                    <textarea name="content" placeholder="Write your reply..." required></textarea>
-                                    <button type="submit" class="submit-reply-btn">Post Reply</button>
-                                </form>
                             </div>
                         </div>
                         {{ end }}

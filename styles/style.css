@@ -592,57 +592,6 @@ body {
     transform: translateY(-1px);
 }
 
-.reply-toggle,
-.show-replies-toggle {
-    display: none;
-}
-
-.reply-btn,
-.show-replies-btn {
-    padding: 6px 14px;
-    font-size: 12px;
-    border-radius: 16px;
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--accent-blue);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    cursor: pointer;
-    transition: all var(--transition-base);
-    user-select: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-weight: 600;
-}
-
-.reply-btn:hover,
-.show-replies-btn:hover {
-    background: rgba(59, 130, 246, 0.2);
-    transform: translateY(-1px);
-}
-
-.reply-form-container {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height var(--transition-base);
-}
-
-.comment-item:has(.reply-toggle:checked) .reply-btn {
-    background: rgba(59, 130, 246, 0.3);
-}
-
-.comment-item:has(.reply-toggle:checked) .reply-form-container {
-    max-height: 250px;
-    margin-top: 12px;
-}
-
-.reply-form {
-    background: rgba(15, 20, 25, 0.6);
-    padding: 14px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-primary);
-}
-
-.reply-form textarea,
 .add-comment-section textarea {
     width: 100%;
     padding: 12px 16px;
@@ -657,7 +606,6 @@ body {
     transition: all var(--transition-base);
 }
 
-.reply-form textarea:focus,
 .add-comment-section textarea:focus {
     outline: none;
     border-color: var(--accent-purple);
@@ -665,7 +613,6 @@ body {
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
-.submit-reply-btn,
 .submit-comment-btn {
     margin-top: 10px;
     padding: 10px 20px;
@@ -680,7 +627,6 @@ body {
     width: 100%;
 }
 
-.submit-reply-btn:hover,
 .submit-comment-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);

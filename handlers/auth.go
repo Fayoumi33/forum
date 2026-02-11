@@ -14,15 +14,24 @@ import (
 
 type login struct {
 	hashedPassword string
-	sesstionToken  string
-	CSRFToken     string
+	sessionToken   string
+	CSRFToken      string
+}
+
+func renderRegisterWithError(w http.ResponseWriter, errorMsg string) {
+	tmpl, err := template.ParseFiles("templates/register.html")
+	if err != nil {
+		RenderError(w, http.StatusInternalServerError)
+		return
+	}
+	tmpl.Execute(w, map[string]string{"Error": errorMsg})
 }
 
 func Register(w http.ResponseWriter, r *http.Request , db *sql.DB) {
 	if r.Method == "GET" {
 		tmpl,err := template.ParseFiles("templates/register.html")
 		if err != nil {
-			http.Error (w, "Internal Server Error", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		tmpl.Execute(w, nil)
@@ -33,41 +42,41 @@ func Register(w http.ResponseWriter, r *http.Request , db *sql.DB) {
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 		confirmPassword := r.FormValue("confirm_password")
-		if password != confirmPassword {
-			http.Error(w, "Passwords do not match" , http.StatusBadRequest)
+		if username == "" || email == "" || password == "" {
+			renderRegisterWithError(w, "Please fill all the fields")
 			return
 		}
-		if username == "" || email == "" || password == "" {
-			http.Error(w, "Please fill all the fields" , http.StatusBadRequest)
+		if password != confirmPassword {
+			renderRegisterWithError(w, "Passwords do not match")
 			return
 		}
 		if !(strings.Contains(email,"@")) {
-			http.Error(w, "Invalid email address", http.StatusBadRequest)
+			renderRegisterWithError(w, "Invalid email address")
 			return
 		}
-		var userID int 
+		var userID int
 		usernameQuery := `select id from users where username = ?`
 		err := db.QueryRow(usernameQuery , username).Scan(&userID)
 		if(err == nil){
-			http.Error(w, "Username already exists", http.StatusBadRequest)
+			renderRegisterWithError(w, "Username already exists")
 			return
 		}
 		var emailID int
 		emailQuery := `select id from users where email = ?`
 		err  = db.QueryRow(emailQuery , email).Scan(&emailID)
 		if(err == nil){
-			http.Error(w, "Email already registered", http.StatusBadRequest)
+			renderRegisterWithError(w, "Email already registered")
 			return
 		}
 		hashedPassword ,err := bcrypt.GenerateFromPassword([]byte(password) , bcrypt.DefaultCost)
 		if err != nil {
-			http.Error(w, "Internal Server Error" , http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		insertUser := `insert into users (username , email , password) values (?,?,?)`
 		_, err = db.Exec(insertUser , username , email , string(hashedPassword))
 		if err != nil {
-			http.Error(w, "Internal Server Error" , http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		http.Redirect(w , r , "/login" , http.StatusSeeOther)
@@ -75,11 +84,20 @@ func Register(w http.ResponseWriter, r *http.Request , db *sql.DB) {
 	}
 }
 
+func renderLoginWithError(w http.ResponseWriter, errorMsg string) {
+	tmpl, err := template.ParseFiles("templates/index.html")
+	if err != nil {
+		RenderError(w, http.StatusInternalServerError)
+		return
+	}
+	tmpl.Execute(w, map[string]string{"Error": errorMsg})
+}
+
 func Login(w http.ResponseWriter, r *http.Request , db *sql.DB) {
 	if r.Method == "GET" {
 		tmpl,err := template.ParseFiles("templates/index.html")
 		if err != nil {
-			http.Error(w, " internal server error" , http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		tmpl.Execute(w, nil)
@@ -87,19 +105,19 @@ func Login(w http.ResponseWriter, r *http.Request , db *sql.DB) {
 	}
 	if r.Method == "POST" {
     fmt.Println("=== LOGIN POST STARTED ===")
-    
+
     email := r.FormValue("email")
     password := r.FormValue("password")
-    
+
     fmt.Println("Email:", email)
     fmt.Println("Password:", password)
-    
+
     if email == "" || password == "" {
         fmt.Println("ERROR: Empty fields")
-        http.Error(w, "Please fill all the fields", http.StatusBadRequest)
+        renderLoginWithError(w, "Please fill all the fields")
         return
     }
-    
+
     fmt.Println("Querying database for email:", email)
     var userID int
     var storedHashedPassword string
@@ -107,17 +125,17 @@ func Login(w http.ResponseWriter, r *http.Request , db *sql.DB) {
     err := db.QueryRow(query, email).Scan(&userID, &storedHashedPassword)
     if err != nil {
         fmt.Println("ERROR: Database query failed:", err)
-        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+        renderLoginWithError(w, "Invalid email or password")
         return
     }
-    
+
     fmt.Println("User found! ID:", userID)
     fmt.Println("Checking password...")
-    
+
     err = bcrypt.CompareHashAndPassword([]byte(storedHashedPassword), []byte(password))
     if err != nil {
         fmt.Println("ERROR: Password wrong:", err)
-        http.Error(w, "Invalid email or password", http.StatusBadRequest)
+        renderLoginWithError(w, "Invalid email or password")
         return
     }
     
@@ -125,16 +143,14 @@ fmt.Println("Password correct!")
 
 fmt.Println("Creating session...")
 sessionID := uuid.New().String()
-expiresAt := time.Now().Add(24 * time.Hour).Format("2006-01-02 15:04:05")
 
 fmt.Println("Session ID:", sessionID)
-fmt.Println("Expires at:", expiresAt)
 
-insertSession := `insert into sessions (id, user_id, expires_at) values (?, ?, datetime('now' , '+24 hours'))`
-_, err = db.Exec(insertSession, sessionID, userID, expiresAt)
+insertSession := `insert into sessions (id, user_id, expires_at) values (?, ?, datetime('now', '+24 hours'))`
+_, err = db.Exec(insertSession, sessionID, userID)
 if err != nil {
     fmt.Println("ERROR: Session insert failed:", err)
-    http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+    RenderError(w, http.StatusInternalServerError)
     return
 }
 

@@ -24,16 +24,13 @@ type Post struct {
 }
 
 type Comment struct {
-    ID int 
+    ID int
     Content string
-    CreatedAt string 
-    UserID int 
+    CreatedAt string
+    UserID int
     Username string
     LikesCount int
     DislikesCount int
-    ParentCommentID *int
-    Replies []Comment
-    RepliesCount int
 }
 
 type PostDetailsData struct{
@@ -52,19 +49,19 @@ type ProfileData struct{
 }
 
 func HomePage(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	fmt.Println("HomePage called") 
+	fmt.Println("HomePage called")
 	filter := r.URL.Query().Get("filter")
 	category := r.URL.Query().Get("category")
-	
+
 	fmt.Println("=== DEBUG ===")
 	fmt.Println("Filter:", filter)
 	fmt.Println("Category:", category)
 	fmt.Println("Full URL:", r.URL.String())
 	fmt.Println("=============")
-	
+
 	userID, err := GetUserFromSession(r, db)
 	if (filter == "created" || filter == "liked") && err != nil {
-		http.Error(w, "Please login first", http.StatusUnauthorized)
+		RenderError(w, http.StatusUnauthorized)
 		return
 	}
 
@@ -99,19 +96,19 @@ func HomePage(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 	if err != nil {
 		fmt.Println("Query error:", err)
-		http.Error(w, "server internal error", http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
 
-	fmt.Println("Query successful, reading rows...") 
+	fmt.Println("Query successful, reading rows...")
 
 	var posts []Post
 	for rows.Next() {
 		var p Post
 		err := rows.Scan(&p.ID, &p.Title, &p.Content, &p.CreatedAt, &p.UserID, &p.Username)
 		if err != nil {
-			fmt.Println("Scan error:", err) 
+			fmt.Println("Scan error:", err)
 			continue
 		}
 		
@@ -136,55 +133,25 @@ func HomePage(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		}
 		
 		// جلب الـ comments
-		commentsQuery := `SELECT c.id, c.content, c.created_at, c.user_id, u.username,
-			c.parent_comment_id
+		commentsQuery := `SELECT c.id, c.content, c.created_at, c.user_id, u.username
 		FROM comments c
 		JOIN users u ON c.user_id = u.id
-		WHERE c.post_id = ? AND c.parent_comment_id IS NULL
+		WHERE c.post_id = ?
 		ORDER BY c.created_at ASC`
-		
+
 		commentRows, err := db.Query(commentsQuery, p.ID)
 		if err == nil {
 			for commentRows.Next() {
 				var comment Comment
 				err := commentRows.Scan(&comment.ID, &comment.Content, &comment.CreatedAt,
-					&comment.UserID, &comment.Username, &comment.ParentCommentID)
+					&comment.UserID, &comment.Username)
 				if err == nil {
 					// حساب likes/dislikes للـ comment
-					db.QueryRow(`SELECT 
+					db.QueryRow(`SELECT
 						COUNT(CASE WHEN type = 'like' THEN 1 END),
 						COUNT(CASE WHEN type = 'dislike' THEN 1 END)
 						FROM comment_likes WHERE comment_id = ?`, comment.ID).Scan(&comment.LikesCount, &comment.DislikesCount)
-					
-					// حساب عدد الردود
-					db.QueryRow(`SELECT COUNT(*) FROM comments WHERE parent_comment_id = ?`, comment.ID).Scan(&comment.RepliesCount)
-					
-					// جلب الردود
-					repliesQuery := `SELECT c.id, c.content, c.created_at, c.user_id, u.username
-					FROM comments c
-					JOIN users u ON c.user_id = u.id
-					WHERE c.parent_comment_id = ?
-					ORDER BY c.created_at ASC`
-					
-					replyRows, err := db.Query(repliesQuery, comment.ID)
-					if err == nil {
-						for replyRows.Next() {
-							var reply Comment
-							err := replyRows.Scan(&reply.ID, &reply.Content, &reply.CreatedAt,
-								&reply.UserID, &reply.Username)
-							if err == nil {
-								// حساب likes/dislikes للرد
-								db.QueryRow(`SELECT 
-									COUNT(CASE WHEN type = 'like' THEN 1 END),
-									COUNT(CASE WHEN type = 'dislike' THEN 1 END)
-									FROM comment_likes WHERE comment_id = ?`, reply.ID).Scan(&reply.LikesCount, &reply.DislikesCount)
-								
-								comment.Replies = append(comment.Replies, reply)
-							}
-						}
-						replyRows.Close()
-					}
-					
+
 					p.Comments = append(p.Comments, comment)
 				}
 			}
@@ -194,31 +161,31 @@ func HomePage(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		posts = append(posts, p)
 	}
 
-	fmt.Println("Total posts found:", len(posts)) 
+	fmt.Println("Total posts found:", len(posts))
 
 	tmpl, err := template.ParseFiles("templates/home.html")
 	if err != nil {
-		fmt.Println("Template error:", err) 
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
+		fmt.Println("Template error:", err)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Println("Executing template...") 
+	fmt.Println("Executing template...")
 	err = tmpl.Execute(w, posts)
 	if err != nil {
-		fmt.Println("Execute error:", err) 
-		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		fmt.Println("Execute error:", err)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Println("HomePage completed successfully") 
+	fmt.Println("HomePage completed successfully")
 }
 
 func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Method == "GET" {
 		tmpl, err := template.ParseFiles("templates/create_post.html")
 		if err != nil {
-			http.Error(w, "internal server error", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		tmpl.Execute(w, nil)
@@ -233,27 +200,27 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		title := r.FormValue("title")
 		content := r.FormValue("content")
 		categories := r.Form["categories"]
-		
-		fmt.Println("Categories received:", categories) // للتأكد
+
+		fmt.Println("Categories received:", categories)
 		if title == "" || content == "" || len(categories) < 1 {
 			http.Error(w, "invalid inputs", http.StatusBadRequest)
 			return
 		}
 		userID, err := GetUserFromSession(r, db)
 		if err != nil {
-			http.Error(w, "server internal error", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		createQuery := `INSERT INTO posts (title, content, user_id, created_at) VALUES (?, ?, ?, datetime('now'))`
 		result, err := db.Exec(createQuery, title, content, userID)
 		if err != nil {
 			fmt.Println("Create post error:", err)
-			http.Error(w, "server internal error", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		postID, err := result.LastInsertId()
 		if err != nil {
-			http.Error(w, "server internal error ", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		for _, categoryName := range categories {
@@ -298,9 +265,9 @@ var post Post
     &post.DislikesCount,)
     if err != nil {
         if err == sql.ErrNoRows {
-            http.Error(w,"post not found",http.StatusNotFound)
+            RenderError(w, http.StatusNotFound)
         }else{
-            http.Error(w,"iternal server error",http.StatusInternalServerError)
+            RenderError(w, http.StatusInternalServerError)
         }
         return
     }
@@ -316,7 +283,7 @@ ORDER BY c.created_at ASC`
 var comments []Comment
 rows,err := db.Query(commentsQuery,postID)
 if err != nil  {
-    http.Error(w,"internal server error",http.StatusInternalServerError)
+    RenderError(w, http.StatusInternalServerError)
     return
 }
 defer rows.Close()
@@ -336,7 +303,7 @@ for rows.Next(){
     }
     tmpl,err := template.ParseFiles("templates/post_details.html")
     if err != nil{
-        http.Error(w,"Error loading templates",http.StatusInternalServerError)
+        RenderError(w, http.StatusInternalServerError)
         return
     }
     tmpl.Execute(w, data)
@@ -350,7 +317,6 @@ func AddComment(w http.ResponseWriter , r *http.Request , db *sql.DB){
     }
     content := r.FormValue("content")
     postIDSrt := r.FormValue("post_id")
-    parentCommentIDStr := r.FormValue("parent_comment_id")
 
     if content == "" || postIDSrt == ""{
         http.Error(w,"missing data" , http.StatusBadRequest)
@@ -361,34 +327,21 @@ func AddComment(w http.ResponseWriter , r *http.Request , db *sql.DB){
         http.Error(w,"invalid post id " , http.StatusBadRequest)
         return
     }
-    
-    var parentCommentID *int
-    if parentCommentIDStr != "" {
-        id, err := strconv.Atoi(parentCommentIDStr)
-        if err == nil {
-            parentCommentID = &id
-        }
-    }
-    
+
     userID, err := GetUserFromSession(r ,db)
     if err != nil {
-        http.Error(w,"Unothorized" , http.StatusUnauthorized)
+        RenderError(w, http.StatusUnauthorized)
         return
     }
-    
-    if parentCommentID != nil {
-        _,err = db.Exec(`INSERT INTO comments(content, post_id, user_id, parent_comment_id, created_at) VALUES (?,?,?,?,datetime('now'))`,
-            content, postID, userID, *parentCommentID)
-    } else {
-        _,err = db.Exec(`INSERT INTO comments(content, post_id, user_id, created_at) VALUES (?,?,?,datetime('now'))`,
-            content, postID, userID)
-    }
-    
+
+    _,err = db.Exec(`INSERT INTO comments(content, post_id, user_id, created_at) VALUES (?,?,?,datetime('now'))`,
+        content, postID, userID)
+
     if err != nil {
-        http.Error(w,"internal server error" , http.StatusInternalServerError)
+        RenderError(w, http.StatusInternalServerError)
         return
     }
-    
+
     referer := r.Header.Get("Referer")
     if referer == "" {
         referer = "/home"
@@ -410,16 +363,16 @@ func LikePost(w http.ResponseWriter , r *http.Request , db *sql.DB){
 	}
 	userID,err := GetUserFromSession(r,db)
 	if err != nil {
-		http.Error(w,"invalid user id " , http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
-	var existingType string 
+	var existingType string
 	query := `SELECT type FROM post_likes WHERE post_id = ? AND user_id = ?`
 	err = db.QueryRow(query,postID,userID).Scan(&existingType)
 	if err == sql.ErrNoRows{
 		db.Exec(`INSERT INTO post_likes(post_id, user_id, type) VALUES(?,?,'like')`,postID,userID)
 	}else if err != nil {
-		http.Error(w,"internal server error",http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}else{
 		if existingType == "like"{
@@ -449,16 +402,16 @@ func DisLikePost(w http.ResponseWriter , r *http.Request , db *sql.DB){
 	}
 	userID,err := GetUserFromSession(r,db)
 	if err != nil {
-		http.Error(w,"internal server error" , http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
-	var existingType string 
+	var existingType string
 	query := `SELECT type FROM post_likes WHERE post_id = ? AND user_id = ?`
 	err = db.QueryRow(query,postID,userID).Scan(&existingType)
 	if err == sql.ErrNoRows{
 		db.Exec(`INSERT INTO post_likes(post_id, user_id, type) VALUES(?,?,'dislike')`,postID,userID)
 	}else if err != nil {
-		http.Error(w,"internal server error",http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}else{
 		if existingType == "dislike" {
@@ -490,18 +443,18 @@ func LikeComment(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	
 	userID, err := GetUserFromSession(r, db)
 	if err != nil {
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
-	
+
 	var existingType string
 	query := `SELECT type FROM comment_likes WHERE comment_id = ? AND user_id = ?`
 	err = db.QueryRow(query, commentID, userID).Scan(&existingType)
-	
+
 	if err == sql.ErrNoRows {
 		db.Exec(`INSERT INTO comment_likes(comment_id, user_id, type) VALUES(?,?,'like')`, commentID, userID)
 	} else if err != nil {
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	} else {
 		if existingType == "like" {
@@ -534,18 +487,18 @@ func DislikeComment(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	
 	userID, err := GetUserFromSession(r, db)
 	if err != nil {
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
-	
+
 	var existingType string
 	query := `SELECT type FROM comment_likes WHERE comment_id = ? AND user_id = ?`
 	err = db.QueryRow(query, commentID, userID).Scan(&existingType)
-	
+
 	if err == sql.ErrNoRows {
 		db.Exec(`INSERT INTO comment_likes(comment_id, user_id, type) VALUES(?,?,'dislike')`, commentID, userID)
 	} else if err != nil {
-		http.Error(w, "internal server error", http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	} else {
 		if existingType == "dislike" {
@@ -576,7 +529,7 @@ func ProfilePage(w http.ResponseWriter , r *http.Request , db *sql.DB){
     err = db.QueryRow(`SELECT username, email FROM users WHERE id = ?`, userID).Scan(&username, &email)
     if err != nil {
         fmt.Println("ERROR: Query failed:", err)
-        http.Error(w, "User not found", http.StatusNotFound)
+        RenderError(w, http.StatusNotFound)
         return
     }
     
@@ -628,7 +581,7 @@ if currentTab == "created" {
 
 rows, err := db.Query(query, userID)
 if err != nil {
-    http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+    RenderError(w, http.StatusInternalServerError)
     return
 }
 defer rows.Close()
@@ -654,7 +607,7 @@ for rows.Next() {
 	}
 	tmpl,err := template.ParseFiles("templates/profile.html")
 	if err != nil {
-		http.Error(w,"internal server error",http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
 	tmpl.Execute(w,data)
@@ -671,7 +624,7 @@ func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		var username, email string
 		err := db.QueryRow(`SELECT username, email FROM users WHERE id = ?`, userID).Scan(&username, &email)
 		if err != nil {
-			http.Error(w, "user not found", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 
@@ -682,7 +635,7 @@ func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 		tmpl, err := template.ParseFiles("templates/edit_profile.html")
 		if err != nil {
-			http.Error(w, "internal server error", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		tmpl.Execute(w, data)
@@ -709,13 +662,13 @@ func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		var storedPassword string
 		err := db.QueryRow(`SELECT password FROM users WHERE id = ?`, userID).Scan(&storedPassword)
 		if err != nil {
-			http.Error(w, "user not found", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 
 		err = bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(currentPassword))
 		if err != nil {
-			http.Error(w, "current password incorrect", http.StatusUnauthorized)
+			RenderError(w, http.StatusUnauthorized)
 			return
 		}
 
@@ -735,21 +688,21 @@ func EditProfile(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		if newPassword != "" {
 			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 			if err != nil {
-				http.Error(w, "internal server error", http.StatusInternalServerError)
+				RenderError(w, http.StatusInternalServerError)
 				return
 			}
 
 			_, err = db.Exec(`UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?`,
 				username, email, string(hashedPassword), userID)
 			if err != nil {
-				http.Error(w, "update failed", http.StatusInternalServerError)
+				RenderError(w, http.StatusInternalServerError)
 				return
 			}
 		} else {
 			_, err = db.Exec(`UPDATE users SET username = ?, email = ? WHERE id = ?`,
 				username, email, userID)
 			if err != nil {
-				http.Error(w, "update failed", http.StatusInternalServerError)
+				RenderError(w, http.StatusInternalServerError)
 				return
 			}
 		}
@@ -778,17 +731,17 @@ func DeletePost(w http.ResponseWriter , r *http.Request , db *sql.DB){
 	var postOwnerID int
 	err = db.QueryRow(query , postID).Scan(&postOwnerID)
 	if err != nil  {
-		http.Error(w , "post not found ", http.StatusNotFound)
+		RenderError(w, http.StatusNotFound)
 		return
 	}
 	if userID != postOwnerID {
-		http.Error(w , "you are not the owner of the post" , http.StatusForbidden)
+		RenderError(w, http.StatusForbidden)
 		return
 	}
 	query = `DELETE FROM posts WHERE id = ?`
 	_,err = db.Exec(query , postID)
 	if err != nil {
-		http.Error(w , "internal server error " , http.StatusInternalServerError)
+		RenderError(w, http.StatusInternalServerError)
 		return
 	}
 	http.Redirect(w , r ,"/profile" , http.StatusSeeOther)
@@ -807,25 +760,25 @@ func EditPost(w http.ResponseWriter, r *http.Request , db *sql.DB){
 			http.Redirect(w , r , "/login" , http.StatusSeeOther)
 			return
 		}
-		var postOwnerID int 
+		var postOwnerID int
 		err = db.QueryRow(`SELECT user_id FROM posts WHERE id = ?` , postID).Scan(&postOwnerID)
 		if err != nil  {
-			http.Error(w , " user not found " , http.StatusNotFound)
+			RenderError(w, http.StatusNotFound)
 			return
 		}
 		if postOwnerID != userID {
-			http.Error(w , " you are not the owner of this post " , http.StatusForbidden)
+			RenderError(w, http.StatusForbidden)
 			return
 		}
 		var title , content string
 		err = db.QueryRow(`SELECT title, content FROM posts WHERE id = ?`,postID).Scan(&title , &content)
 		if err != nil  {
-			http.Error(w,"server internal error " , http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		tmpl ,err := template.ParseFiles("templates/edit_post.html")
 		if err != nil  {
-			http.Error(w , "server internal error " , http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		data := Post{
@@ -855,22 +808,26 @@ func EditPost(w http.ResponseWriter, r *http.Request , db *sql.DB){
 			http.Redirect(w , r , "/login" , http.StatusSeeOther)
 			return
 		}
-		var postOwnerID int 
+		var postOwnerID int
 		err = db.QueryRow(`SELECT user_id FROM posts WHERE id = ?` , postID).Scan(&postOwnerID)
 		if err != nil  {
-			http.Error(w , "user not found ",http.StatusNotFound)
+			RenderError(w, http.StatusNotFound)
 			return
 		}
 		if postOwnerID != userID {
-			http.Error(w," you are not the owner of this post",http.StatusForbidden)
+			RenderError(w, http.StatusForbidden)
 			return
 		}
 		_ , err = db.Exec(`UPDATE posts SET title = ?, content = ? WHERE id = ?` , title , content , postID)
 		if err != nil {
-			http.Error(w, "internal server error", http.StatusInternalServerError)
+			RenderError(w, http.StatusInternalServerError)
 			return
 		}
 		_,err = db.Exec(`DELETE FROM post_categories WHERE post_id = ?`,postID)
+		if err != nil {
+			RenderError(w, http.StatusInternalServerError)
+			return
+		}
 		for _, categoryName := range categories{
 			var categoryID int 
 			err := db.QueryRow(`SELECT id FROM categories WHERE name = ?` , categoryName).Scan(&categoryID)

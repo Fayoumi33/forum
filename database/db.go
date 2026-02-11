@@ -12,6 +12,13 @@ func InitDB() *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Enable foreign key constraints
+	_, err = db.Exec("PRAGMA foreign_keys = ON")
+	if err != nil {
+		log.Fatal("Failed to enable foreign keys:", err)
+	}
+
 	createTables(db)
 	insertDefaultCategories(db)
 	return db
@@ -32,7 +39,7 @@ func createTables(db *sql.DB) {
 	content text,
 	created_at datetime default current_timestamp,
 	user_id integer not null,
-	foreign key(user_id) references users(id)
+	foreign key(user_id) references users(id) ON DELETE CASCADE
 	)`
 
 	comments := `create table if not exists comments(
@@ -41,10 +48,8 @@ func createTables(db *sql.DB) {
 	created_at datetime default current_timestamp,
 	user_id integer not null,
 	post_id integer not null,
-	parent_comment_id integer,
-	foreign key(user_id) references users(id),
-	foreign key(post_id) references posts(id),
-	foreign key(parent_comment_id) references comments(id)
+	foreign key(user_id) references users(id) ON DELETE CASCADE,
+	foreign key(post_id) references posts(id) ON DELETE CASCADE
 	)`
 
 	post_likes := `create table if not exists post_likes(
@@ -52,8 +57,8 @@ func createTables(db *sql.DB) {
 	type text not null,
 	post_id integer not null,
 	user_id integer not null,
-	foreign key(post_id) references posts(id),
-	foreign key(user_id) references users(id)
+	foreign key(post_id) references posts(id) ON DELETE CASCADE,
+	foreign key(user_id) references users(id) ON DELETE CASCADE
 	)`
 
 	comments_likes := `create table if not exists comment_likes(
@@ -61,8 +66,8 @@ func createTables(db *sql.DB) {
 	type text not null,
 	comment_id integer not null,
 	user_id integer not null,
-	foreign key(comment_id) references comments(id),
-	foreign key(user_id) references users(id)
+	foreign key(comment_id) references comments(id) ON DELETE CASCADE,
+	foreign key(user_id) references users(id) ON DELETE CASCADE
 	)`
 	categories := `create table if not exists categories(
 	id integer primary key autoincrement,
@@ -72,14 +77,14 @@ func createTables(db *sql.DB) {
 	id integer primary key autoincrement,
 	post_id integer not null,
 	category_id integer not null,
-	foreign key(post_id) references posts(id),
-	foreign key(category_id) references categories(id)
+	foreign key(post_id) references posts(id) ON DELETE CASCADE,
+	foreign key(category_id) references categories(id) ON DELETE CASCADE
 	)`
 	sessions := `create table if not exists sessions(
 	id text primary key,
 	user_id integer not null,
 	expires_at text not null,
-	foreign key(user_id) references users(id)
+	foreign key(user_id) references users(id) ON DELETE CASCADE
 	)`
 
 	queries := []string{users, posts, comments, post_likes, comments_likes, categories, post_categories, sessions}
