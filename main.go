@@ -32,10 +32,10 @@ func main() {
         handlers.Login(w, r,db)
     })
     
-    http.HandleFunc("/home", handlers.RequireAuth(db, func(w http.ResponseWriter, r *http.Request) {
+    http.HandleFunc("/home", func(w http.ResponseWriter, r *http.Request) {
         fmt.Println("=== Home handler called ===") 
         handlers.HomePage(w, r, db)
-    }))
+    })
     
     http.HandleFunc("/create-post" , handlers.RequireAuth(db , func(w http.ResponseWriter , r *http.Request) {
         handlers.CreatePost(w , r , db)
