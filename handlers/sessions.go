@@ -62,3 +62,15 @@ func RequireAuth(db *sql.DB, next http.HandlerFunc) http.HandlerFunc {
 		next(w, r)
 	}
 }
+
+
+func RedirectIfAuthenticated(db *sql.DB, next http.HandlerFunc) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        _, err := GetUserFromSession(r, db)
+        if err == nil {
+            http.Redirect(w, r, "/home", http.StatusSeeOther)
+            return
+        }
+        next(w, r)
+    }
+}
