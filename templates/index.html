@@ -210,6 +210,44 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
         }
 
+        .guest-option {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .guest-option form {
+            width: 100%;
+        }
+
+        .guest-btn {
+            width: 100%;
+            padding: 16px 28px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
+        .guest-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .guest-btn:active {
+            transform: translateY(0);
+        }
+
         .create-page-text {
             text-align: center;
             margin-top: 30px;
@@ -297,10 +335,13 @@
                 <hr class="divider">
 
                 <a href="/register" class="create-account-btn">Create new account</a>
+
+                <div class="guest-option">
+                    <form action="/home" method="get">
+                        <button type="submit" class="guest-btn">Continue as Guest</button>
+                    </form>
+                </div>
             </div>
-            <div class="guest-option">
-    <a href="/home" class="guest-btn">Continue as Guest</a>
-</div>
 
         </div>
     </div>

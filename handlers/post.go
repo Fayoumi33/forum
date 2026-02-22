@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type Post struct {
@@ -182,13 +183,13 @@ func CreatePost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			http.Error(w, "invalid form data", http.StatusBadRequest)
 			return
 		}
-		title := r.FormValue("title")
+		title := strings.TrimSpace(r.FormValue("title"))
 		content := r.FormValue("content")
 		categories := r.Form["categories"]
 
 		fmt.Println("Categories received:", categories)
 		if title == "" || content == "" || len(categories) < 1 {
-			http.Error(w, "invalid inputs", http.StatusBadRequest)
+			RenderError(w, http.StatusBadRequest)
 			return
 		}
 		userID, err := GetUserFromSession(r, db)

@@ -9,6 +9,8 @@ func RenderError(w http.ResponseWriter, statusCode int) {
 	var templateFile string
 
 	switch statusCode {
+	case http.StatusBadRequest: // 400
+		templateFile = "templates/400.html"
 	case http.StatusUnauthorized: // 401
 		templateFile = "templates/401.html"
 	case http.StatusForbidden: // 403

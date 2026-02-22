@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type Comment struct {
@@ -21,16 +22,16 @@ func AddComment(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, " mehtod not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	content := r.FormValue("content")
+	content := strings.TrimSpace(r.FormValue("content"))
 	postIDSrt := r.FormValue("post_id")
 
 	if content == "" || postIDSrt == "" {
-		http.Error(w, "missing data", http.StatusBadRequest)
+		RenderError(w, http.StatusBadRequest)
 		return
 	}
 	postID, err := strconv.Atoi(postIDSrt)
 	if err != nil {
-		http.Error(w, "invalid post id ", http.StatusBadRequest)
+		RenderError(w, http.StatusBadRequest)
 		return
 	}
 
