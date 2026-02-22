@@ -71,7 +71,7 @@
                             <a href="/edit-post?id={{.ID}}" class="edit-btn">✏️ Edit</a>
                             <form action="/delete-post" method="post" style="display:inline;">
                                 <input type="hidden" name="post_id" value="{{.ID}}">
-                                <button type="submit" class="delete-btn" onclick="return confirm('Are you sure?')">🗑️ Delete</button>
+                                <!-- <button type="submit" class="delete-btn" onclick="return confirm('Are you sure?')">🗑️ Delete</button> -->
                             </form>
                         </div>
                     {{end}}

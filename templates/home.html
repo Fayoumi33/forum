@@ -50,7 +50,16 @@
             <input type="checkbox" id="toggle-{{.ID}}" class="comment-toggle">
 
             <div class="post-card">
-                <h2>{{ .Title }}</h2>
+                <div class="post-header">
+                    <h2>{{ .Title }}</h2>
+                    {{ if .Categories }}
+                    <div class="post-categories">
+                        {{ range .Categories }}
+                        <span class="category-tag">{{ . }}</span>
+                        {{ end }}
+                    </div>
+                    {{ end }}
+                </div>
                 <p class="post-author">By: {{ .Username }}</p>
                 <p class="post-content">{{ .Content }}</p>
 
