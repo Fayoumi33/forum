@@ -110,12 +110,3 @@ Open your browser at: [http://localhost:8080](http://localhost:8080)
 | `modernc.org/sqlite` | Pure-Go SQLite driver (no CGO) |
 | `github.com/google/uuid` | Session token generation |
 | `golang.org/x/crypto` | bcrypt password hashing |
-
----
-
-## Authors
-
-- Mohamed Darwish — [@mohamdarwish](https://github.com/mohamdarwish)
-- Ebrahim Alfayoumi — [@ealfayou](https://github.com/ealfayou)
-- Saeed Alsayeg — [@salsayeg](https://github.com/salsayeg)
-- Osama Essa — [@osessa](https://github.com/osessa)
