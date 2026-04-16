@@ -3,12 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 - Forbidden</title>
+    <title>403 - Access Forbidden</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles/style.css">
     <style>
+        body {
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Warning stripes background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 40px,
+                rgba(239, 68, 68, 0.03) 40px,
+                rgba(239, 68, 68, 0.03) 80px
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .error-container {
             flex: 1;
             display: flex;
@@ -16,71 +38,171 @@
             justify-content: center;
             padding: 40px 20px;
             min-height: calc(100vh - 70px);
+            position: relative;
+            z-index: 1;
         }
 
         .error-card {
-            background: rgba(30, 36, 51, 0.6);
-            backdrop-filter: blur(20px);
+            background: rgba(20, 24, 36, 0.75);
+            backdrop-filter: blur(24px);
             padding: 60px 50px;
             border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(239, 68, 68, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
             text-align: center;
-            max-width: 550px;
+            max-width: 560px;
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .error-icon {
-            font-size: 80px;
-            margin-bottom: 24px;
-            animation: bounce 2s ease-in-out infinite;
+        /* Top red glow border */
+        .error-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ef4444, #dc2626, #ef4444, transparent);
+            border-radius: 0 0 4px 4px;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        /* Subtle red glow behind card */
+        .error-card::after {
+            content: '';
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Lock icon container */
+        .lock-container {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 28px;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            animation: pulse-ring 2.5s ease-out infinite;
+        }
+
+        .pulse-ring-2 {
+            animation-delay: 0.8s;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.85); opacity: 1; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        .lock-circle {
+            position: absolute;
+            inset: 10px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-emoji {
+            font-size: 52px;
+            display: block;
+            animation: lock-shake 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.5));
+        }
+
+        @keyframes lock-shake {
+            0%, 80%, 100% { transform: rotate(0deg) scale(1); }
+            83% { transform: rotate(-8deg) scale(1.05); }
+            86% { transform: rotate(8deg) scale(1.05); }
+            89% { transform: rotate(-5deg) scale(1.02); }
+            92% { transform: rotate(5deg) scale(1.02); }
+            95% { transform: rotate(0deg) scale(1); }
+        }
+
+        .forbidden-badge {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #f87171;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 18px;
         }
 
         .error-code {
-            font-size: 72px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            font-size: 80px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff8a80 0%, #ef4444 40%, #b91c1c 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             line-height: 1;
+            filter: drop-shadow(0 2px 12px rgba(239, 68, 68, 0.35));
         }
 
         .error-title {
-            font-size: 28px;
+            font-size: 26px;
             color: #ffffff;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             font-weight: 700;
         }
 
+        .divider {
+            width: 48px;
+            height: 3px;
+            background: linear-gradient(90deg, #ef4444, #b91c1c);
+            border-radius: 2px;
+            margin: 0 auto 18px;
+        }
+
         .error-message {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 16px;
-            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 15px;
+            line-height: 1.7;
             margin-bottom: 36px;
+        }
+
+        .error-message strong {
+            color: rgba(255, 255, 255, 0.85);
         }
 
         .error-buttons {
             display: flex;
-            gap: 16px;
+            gap: 14px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 14px 32px;
+            padding: 13px 30px;
             border: none;
             border-radius: 12px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
             text-decoration: none;
             display: inline-block;
         }
@@ -88,41 +210,41 @@
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.45);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.12);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.35);
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.55);
             transform: translateY(-2px);
         }
 
         @media (max-width: 767px) {
             .error-card {
-                padding: 40px 30px;
+                padding: 44px 28px;
             }
 
             .error-code {
-                font-size: 56px;
+                font-size: 64px;
             }
 
             .error-title {
-                font-size: 24px;
+                font-size: 22px;
             }
 
             .error-message {
-                font-size: 15px;
+                font-size: 14px;
             }
 
             .error-buttons {
@@ -131,6 +253,7 @@
 
             .btn {
                 width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -150,15 +273,30 @@
 
     <div class="error-container">
         <div class="error-card">
-            <div class="error-icon">🚫</div>
+
+            <div class="lock-container">
+                <div class="pulse-ring"></div>
+                <div class="pulse-ring pulse-ring-2"></div>
+                <div class="lock-circle">
+                    <span class="lock-emoji">🔒</span>
+                </div>
+            </div>
+
+            <div class="forbidden-badge">Access Denied</div>
             <div class="error-code">403</div>
-            <h1 class="error-title">Access Forbidden</h1>
+            <h1 class="error-title">Forbidden</h1>
+            <div class="divider"></div>
+
             <p class="error-message">
-                You don't have permission to access this resource. Please contact the administrator if you believe this is an error.
+                You are <strong>not allowed</strong> to access this page.<br>
+                This area is restricted to authorized users only.
             </p>
+
             <div class="error-buttons">
                 <a href="/home" class="btn btn-primary">Go to Home</a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
             </div>
+
         </div>
     </div>
 </body>
